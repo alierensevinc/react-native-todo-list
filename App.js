@@ -1,15 +1,25 @@
-import {Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import Task from "./src/components/Task";
+import {
+    FlatList,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import {useState} from "react";
+import TaskItem from "./src/components/TaskItem";
 
-export default function App() {
-    const [task, setTask] = useState('');
+const App = () => {
+    const [newTask, setNewTask] = useState('');
     const [taskItems, setTaskItems] = useState([]);
 
-    const handleAddTask = () => {
+    const addTask = () => {
         Keyboard.dismiss();
-        setTaskItems([...taskItems, task]);
-        setTask(null);
+        setTaskItems([...taskItems, newTask]);
+        setNewTask(null);
     }
 
     const completeTask = (index) => {
@@ -23,17 +33,14 @@ export default function App() {
             <View style={styles.tasksWrapper}>
                 <Text style={styles.sectionTitle}>Today's Tasks</Text>
                 <View style={styles.items}>
-                    {
-                        taskItems.map((item, index) => {
-                            return (
-                                <TouchableOpacity
-                                    key={index}
-                                    onPress={() => completeTask(index)}>
-                                    <Task text={item}/>
-                                </TouchableOpacity>
-                            )
-                        })
-                    }
+                    <FlatList data={taskItems}
+                              renderItem={({item, index}) => (
+                                  <TaskItem
+                                      item={item}
+                                      index={index}
+                                      completeTask={completeTask}/>
+                              )}
+                    />
                 </View>
             </View>
             <KeyboardAvoidingView
@@ -42,11 +49,11 @@ export default function App() {
                 <TextInput
                     style={styles.input}
                     placeholder={'Write a task'}
-                    value={task}
-                    onChangeText={setTask}/>
-                <TouchableOpacity onPress={handleAddTask}>
+                    value={newTask}
+                    onChangeText={setNewTask}/>
+                <TouchableOpacity onPress={addTask}>
                     <View style={styles.addWrapper}>
-                        <Text style={styles.addText}>+</Text>
+                        <Text>+</Text>
                     </View>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
@@ -98,6 +105,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#C0C0C0',
         borderWidth: 1,
-    },
-    addText: {}
+    }
 });
+
+export default App;
