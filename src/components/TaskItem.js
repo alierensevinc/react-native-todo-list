@@ -2,10 +2,10 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import Task from "./Task";
 
-const TaskItem = ({item, index, completeTask}) => {
+const TaskItem = ({task, completeTask}) => {
     return (
-        <TouchableOpacity onPress={() => completeTask(index)}>
-            <Task text={item}/>
+        <TouchableOpacity onPress={() => completeTask(task)}>
+            <Task text={task}/>
         </TouchableOpacity>
     )
 }
