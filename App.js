@@ -14,18 +14,31 @@ import TaskItem from "./src/components/TaskItem";
 
 const App = () => {
     const [newTask, setNewTask] = useState('');
-    const [taskItems, setTaskItems] = useState([]);
+    const [taskItems, setTaskItems] = useState(['1', '2', '3', '4', '5', '6', '7', '8']);
+    const [inputError, setInputError] = useState(false);
 
     const addTask = () => {
-        Keyboard.dismiss();
-        setTaskItems([...taskItems, newTask]);
-        setNewTask(null);
+        if (newTask) {
+            Keyboard.dismiss();
+            setInputError(false);
+            setTaskItems([...taskItems, newTask]);
+            setNewTask('');
+        } else {
+            setInputError(true);
+        }
     }
 
     const completeTask = (index) => {
         let itemsCopy = [...taskItems];
         itemsCopy.splice(index, 1);
         setTaskItems(itemsCopy);
+    }
+
+    const inputHandler = (text) => {
+        if (inputError && text) {
+            setInputError(false);
+        }
+        setNewTask(text);
     }
 
     return (
@@ -47,10 +60,10 @@ const App = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.writeTaskWrapper}>
                 <TextInput
-                    style={styles.input}
+                    style={inputError ? [styles.input, styles.error] : styles.input}
                     placeholder={'Write a task'}
                     value={newTask}
-                    onChangeText={setNewTask}/>
+                    onChangeText={inputHandler}/>
                 <TouchableOpacity onPress={addTask}>
                     <View style={styles.addWrapper}>
                         <Text>+</Text>
@@ -67,7 +80,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#E8EAED',
     },
     tasksWrapper: {
-        paddingTop: 80,
+        flex: 1,
+        paddingTop: 60,
         paddingHorizontal: 20,
     },
     sectionTitle: {
@@ -78,13 +92,12 @@ const styles = StyleSheet.create({
         marginTop: 30
     },
     writeTaskWrapper: {
-        position: 'absolute',
-        bottom: 60,
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        marginBottom: 20
     },
     input: {
         flex: 1,
@@ -94,6 +107,10 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         borderColor: '#C0C0C0',
         borderWidth: 1,
+    },
+    error: {
+        borderColor: '#AA0000',
+        borderWidth: 3
     },
     addWrapper: {
         width: 60,

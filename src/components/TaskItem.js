@@ -4,8 +4,7 @@ import Task from "./Task";
 
 const TaskItem = ({item, index, completeTask}) => {
     return (
-        <TouchableOpacity
-            onPress={() => completeTask(index)}>
+        <TouchableOpacity onPress={() => completeTask(index)}>
             <Task text={item}/>
         </TouchableOpacity>
     )
